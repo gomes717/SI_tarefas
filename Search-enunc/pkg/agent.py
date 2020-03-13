@@ -37,15 +37,16 @@ class Agent:
         initial = self.positionSensor()
         self.prob.defInitialState(initial.row, initial.col)
         self.cost = 0
+        self.nextState =  self.prob.initialState
         # Define o estado atual do agente = estado inicial
         self.currentState = self.prob.initialState
         # @TODO T_AAFP - defina estado objetivo
         # Define o estado objetivo
         # self.prob.defGoalState(?, ?)
-        self.prob.defGoalState(2,8)
+        self.prob.defGoalState(0,8)
         # o metodo abaixo serve apenas para a view desenhar a pos objetivo
         # self.model.setGoalPos(2,8)
-        self.model.setGoalPos(2,8)
+        self.model.setGoalPos(0,8)
         # Plano de busca - inicialmente vazio (equivale a solucao)
         self.plan = None
 
@@ -64,7 +65,7 @@ class Agent:
         if self.counter == -1:
             # @TODO T_AAFP: dar um plano fixo ao agente (preh-programado) - ver cardinal.py
             # @TODO T_AAFP: plano = solucao: contem acoes que levam o agente ateh o estado objetivo
-            self.plan = [0,0,0,1,2,2,2,2,1,1,2]
+            self.plan = [0,0,0,1,2,2,2,2,1,1,2,0,0]
 
             if self.plan != None:
                 self.printPlan()
@@ -76,7 +77,7 @@ class Agent:
         self.counter += 1
 
         # @TODO T_AAFP - testar se atingiu o estado objetivo ou se chegou ao final do plano sem alcancar o objetivo
-        if(self.positionSensor() == self.prob.goalState):
+        if(self.prob.goalTest(self.positionSensor())):
             #colocar print final aqui
             print("*************** ultimo ciclo ***********************")
             print("estado atual:" + str(self.currentState))
@@ -98,28 +99,25 @@ class Agent:
 
         possibleAction = self.prob.possibleActions(self.positionSensor())
         currentAction = self.plan[self.counter]
+        self.nextState = self.prob.suc(self.currentState,currentAction)
         # @TODO T_AAFP - fazer prints solicitados
-        #*************** inicio do ciclo ***********************
-        #estado atual: (3,6)
-        #açoes possiveis: {N NE SE S SO }
-        #ct = 10 de 11. Ação escolhida=NE
-        #custo ate o momento (com a acao escolhida): 11.5
-        #****************************************************
         print("*************** inicio do ciclo ***********************")
         print("estado atual:" + str(self.currentState))
-        print("açoes possiveis:")
+        print("proximo estado:" + str(self.nextState))
+        print("açoes possiveis:{ ", end= '')
         for i in range(len(action)):
             if(possibleAction[i]==1):
-                print(action[i])
+                print("{} ".format(action[i]),end='')
+        print("}")
         print("ct = "+ str(self.counter) +" de "+str(len(self.plan))+  ". Ação escolhida=" +action[currentAction])
         print("custo ate o momento (com a acao escolhida):" + str(self.cost))
         print("****************************************************\n")
         # @TODO T_AAFP - o agente deve executar a acao e atualizar seu estado atual
 
-        self.currentState = self.positionSensor()
+
         self.executeGo(currentAction)
         self.cost += self.prob.getActionCost(currentAction)
-
+        self.currentState = self.positionSensor()
         return 1
 
     def executeGo(self, direction):

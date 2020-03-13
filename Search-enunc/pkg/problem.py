@@ -44,6 +44,26 @@ class Problem:
         col = state.col
 
         # @TODO T_AAFP
+        if(action == N):
+            row -= 1
+        elif(action == S):
+            row += 1
+        elif(action == O):
+            col -= 1
+        elif(action == L):
+            col+= 1
+        elif(action == SE):
+            col+= 1
+            row += 1
+        elif(action == SO):
+            row += 1
+            col -= 1
+        elif(action == NE):
+            col+= 1
+            row -= 1
+        elif(action == NO):
+            row -= 1
+            col -= 1
 
         return State(row, col)
 
@@ -148,4 +168,6 @@ class Problem:
         @param currentState: estado atual.
         @return True se o estado atual for igual ao estado objetivo."""
          # @TODO T_AAFP
-        return True # Utilizar Operador de igualdade definido em __eq__ no arquivo state.py
+        if(currentState == self.goalState):
+             return True # Utilizar Operador de igualdade definido em __eq__ no arquivo state.py
+        return False
