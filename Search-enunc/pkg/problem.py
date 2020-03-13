@@ -56,11 +56,43 @@ class Problem:
         @return ações possíveis"""
 
         actions = [1,1,1,1,1,1,1,1] # Supõe que todas as ações são possíveis
-
         # @TODO T_AAFP
 
         row = state.row
         col = state.col
+        #testa final do mapa
+        if(col+1 >= self.maxColumns):
+            actions[1] = actions[2] = actions[3] = -1
+        elif(col-1 < 0):
+            actions[5] = actions[6] = actions[7] = -1
+        if(col+1 < self.maxColumns):
+            if(self.mazeBelief.walls[row][col + 1]): #L
+                actions[2] = -1
+        if(col-1 >= 0):
+            if(self.mazeBelief.walls[row][col - 1]): #O
+                actions[6] = -1
+        if(row+1 >= self.maxRows):
+            actions[3] = actions[4] = actions[5] = -1
+        elif(row-1 < 0):
+            actions[0] = actions[1] = actions[7] = -1
+        if(row-1 >= 0):
+            if(self.mazeBelief.walls[row - 1][col]): #N
+                actions[0] = -1
+            if(col-1 >= 0):
+                if(self.mazeBelief.walls[row -1][col-1]): #NO
+                    actions[7] = -1
+            if(col + 1 < self.maxColumns):
+                if(self.mazeBelief.walls[row - 1][col+1]): #NE
+                    actions[1] = -1
+        if(row+1 < self.maxRows):
+            if(self.mazeBelief.walls[row + 1][col]): #S
+                    actions[4] = -1
+            if(col - 1 >= 0):
+                if(self.mazeBelief.walls[row + 1][col-1]): #SO
+                    actions[5] = -1
+            if(col +1 < self.maxColumns):
+                if(self.mazeBelief.walls[row + 1][col+1]): #SE
+                    actions[3] = -1
 
         return actions
 
@@ -75,6 +107,29 @@ class Problem:
         actions = [1,-1,1,-1,1,-1,1,-1] # Supõe que todas as ações (menos na diagonal) são possíveis
 
         # @TODO T_AAFP
+        if(col+1 >= self.maxColumns):
+             actions[2] = -1
+        elif(col-1 < 0):
+             actions[6] = -1
+
+        if(col+1 < self.maxColumns):
+            if(self.mazeBelief.walls[row][col + 1]): #L
+                actions[2] = -1
+        if(col-1 >= 0):
+            if(self.mazeBelief.walls[row][col - 1]): #O
+                actions[6] = -1
+
+        if(row+1 >= self.maxRows):
+            actions[4] = -1
+        elif(row-1 < 0):
+            actions[0] = -1
+
+        if(row-1 >= 0):
+            if(self.mazeBelief.walls[row - 1][col]): #N
+                actions[0] = -1
+        if(row+1 < self.maxRows):
+            if(self.mazeBelief.walls[row + 1][col]): #S
+                actions[4] = -1
 
 
         return actions
@@ -93,4 +148,4 @@ class Problem:
         @param currentState: estado atual.
         @return True se o estado atual for igual ao estado objetivo."""
          # @TODO T_AAFP
-        return true # Utilizar Operador de igualdade definido em __eq__ no arquivo state.py
+        return True # Utilizar Operador de igualdade definido em __eq__ no arquivo state.py
